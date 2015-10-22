@@ -10,10 +10,6 @@ import java.util.List;
 import jaxb.JAXBMarshaller;
 import people.People;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-
 public class MarshalPeople {
 
 	public static void main(String[] argv) throws IOException {
@@ -126,29 +122,15 @@ public class MarshalPeople {
 		 * MARSHALLING JSON
 		 *******************/
 
-		// Jackson Object Mapper 
-		ObjectMapper mapper = new ObjectMapper();
-		
-		// Adding the Jackson Module to process JAXB annotations
-        JaxbAnnotationModule module = new JaxbAnnotationModule();
-        
-		// Configure as necessary
-		mapper.registerModule(module);
-		mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+		String jsonDocument = "src/json/marshalled_people.json";
 
-        // Serialize to json string
-        String result = mapper.writeValueAsString(people);
-
-        // Write to console and to file
-        String jsonDocument = "src/json/marshalled_people.json";
+		// Serialize to JSON string and write to file
+		String jsonResult = jaxbMarshaller.marshalToJSON(new File(jsonDocument), people);
 
         System.out.println("\n===============================");
 		System.out.println("Marshaling people in " + jsonDocument + " document");
 		System.out.println("--------------------------------");
-        System.out.println(result);
-
-        mapper.writeValue(new File(jsonDocument), people);
+        System.out.println(jsonResult);
 	}
 
 	/**

@@ -65,8 +65,8 @@
 	</target>
 	
 	<target name="execute.evaluation">
-		<echo message="Executing ReadXML class" />
-		<java classname="execute.ReadXML" classpath="${build.dir}">
+		<echo message="Executing ReadPeopleXML class" />
+		<java classname="execute.ReadPeopleXML" classpath="${build.dir}">
 			<classpath>
 				<fileset dir="${lib.dir}">
 					<include name="**/*.jar" />

@@ -10,6 +10,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+
 public class JAXBMarshaller {
 	
 	/**
@@ -88,27 +92,36 @@ public class JAXBMarshaller {
 		return null;
 	}
 
-//	public void marshalToJSON(
-//			File jsonDocument,
-//			Object jaxbElement,
-//			String instanceName
-//		) {
-//			try {
-//				// New instance
-//				JAXBContext jaxbContext = JAXBContext.newInstance(instanceName);
-//
-//				// New Marshaller
-//				Marshaller marshaller = jaxbContext.createMarshaller();
-//				marshaller.setProperty(MarshallerProperties.MEDIA_TYPE,"application/json");
-//
-//				// Marshal object to xml document
-//				marshaller.marshal(jaxbElement, new FileOutputStream(xmlDocument));
-//
-//			} catch (IOException e) {
-//				System.out.println(e.toString());
-//
-//			} catch (JAXBException e) {
-//				System.out.println(e.toString());
-//			}
-//		}
+	/**
+	 * Serialize Object to JSON string and write it to given file.
+	 * Return JSON string
+	 * 
+	 * @param jsonDocument
+	 * @param element
+	 * @return
+	 */
+	public String marshalToJSON(
+		File jsonDocument,
+		Object element
+	) throws IOException {
+		// Jackson Object Mapper 
+		ObjectMapper mapper = new ObjectMapper();
+		
+		// Adding the Jackson Module to process JAXB annotations
+        JaxbAnnotationModule module = new JaxbAnnotationModule();
+        
+		// Configure as necessary
+		mapper.registerModule(module);
+		mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+
+        // Serialize to json string
+        String result = mapper.writeValueAsString(element);
+
+        // Write to file
+        mapper.writeValue(jsonDocument, element);
+
+        // Return json string
+        return result;
+	}
 }
